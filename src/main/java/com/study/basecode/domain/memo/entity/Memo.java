@@ -21,14 +21,14 @@ public class Memo {
 
     private String contents;
 
-    public Memo(MemoRequsetDto memoRequsetDto) {
-        name = memoRequsetDto.getName();
+    public Memo(String name, MemoRequsetDto memoRequsetDto) {
+        this.name = name;
         title = memoRequsetDto.getTitle();
         contents = memoRequsetDto.getContents();
     }
 
-    public Memo patchMemo(MemoRequsetDto memoRequsetDto) {
-        name = memoRequsetDto.getName();
+    public Memo patchMemo(String name, MemoRequsetDto memoRequsetDto) {
+        this.name = name;
         title = memoRequsetDto.getTitle();
         contents = memoRequsetDto.getContents();
         return this;
