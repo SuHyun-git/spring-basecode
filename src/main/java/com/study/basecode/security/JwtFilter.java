@@ -53,18 +53,21 @@ public class JwtFilter implements Filter {
             // JWT 유효성 검사와 claims 추출
             Claims claims = jwtUtil.extractClaims(jwt);
 
-            // 관리자 권한이 필요한 경로 설정
-            List<String> allowedMethods = Arrays.asList("PUT", "DELETE");
-            String pathPrefix = "/todos/";
+//            // 관리자 권한이 필요한 경로 설정
+//            List<String> allowedMethods = Arrays.asList("PUT", "DELETE");
+//            String pathPrefix = "/todos/";
 
-            // 경로와 메서드를 체크하고, 관리자 권한이 필요한 경로인지 확인
-            if (checkMethodPath(method, url, allowedMethods, pathPrefix)) {
-                String userRole = claims.get("userRole", String.class);
-                if (!UserRole.ADMIN.name().equals(userRole)) {
-                    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "관리자 권한이 필요합니다."); // 관리자 권한이 없는 경우 403을 반환
-                    return;
-                }
-            }
+//            // 경로와 메서드를 체크하고, 관리자 권한이 필요한 경로인지 확인
+//            if (checkMethodPath(method, url, allowedMethods, pathPrefix)) {
+//                String userRole = claims.get("userRole", String.class);
+//                if (!UserRole.ADMIN.name().equals(userRole)) {
+//                    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "관리자 권한이 필요합니다."); // 관리자 권한이 없는 경우 403을 반환
+//                    return;
+//                }
+//            }
+            // 사용자 정보를 ArgumentResolver로 넘기기 위해 HttpServletRequest에 세팅하는 과정
+            httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
+            httpRequest.setAttribute("email", claims.get("email", String.class));
 
             chain.doFilter(request, response);
         } catch (SecurityException | MalformedJwtException e) {

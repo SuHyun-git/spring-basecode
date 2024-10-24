@@ -1,9 +1,11 @@
 package com.study.basecode.domain.memo.controller;
 
 
+import com.study.basecode.domain.auth.dto.AuthUser;
 import com.study.basecode.domain.memo.dto.MemoRequsetDto;
 import com.study.basecode.domain.memo.dto.MemoResponseDto;
 import com.study.basecode.domain.memo.service.MemoService;
+import com.study.basecode.security.Auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,8 @@ public class MemoController {
     private final MemoService memoService;
 
     @PostMapping
-    public ResponseEntity<MemoResponseDto> createMemo(@RequestBody MemoRequsetDto memoRequsetDto) {
-        MemoResponseDto memoResponseDto = memoService.createMemo(memoRequsetDto);
+    public ResponseEntity<MemoResponseDto> createMemo(@Auth AuthUser authUser, @RequestBody MemoRequsetDto memoRequsetDto) {
+        MemoResponseDto memoResponseDto = memoService.createMemo(authUser, memoRequsetDto);
         return ResponseEntity.status(HttpStatus.OK).body(memoResponseDto);
     }
 
