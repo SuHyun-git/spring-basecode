@@ -1,9 +1,9 @@
-package com.study.basecode.domain.user.dto;
+package com.study.basecode.domain.auth.dto;
 
 import lombok.Getter;
 
 @Getter
-public class UserRequestDto {
+public class SigininRequestDto {
     private String email;
     private String password;
 }
