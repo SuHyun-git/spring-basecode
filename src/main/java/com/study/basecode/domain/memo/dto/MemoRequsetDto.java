@@ -1,4 +1,4 @@
-package com.study.basecode.dto;
+package com.study.basecode.domain.memo.dto;
 
 import lombok.Getter;
 

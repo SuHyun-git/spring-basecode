@@ -1,9 +1,9 @@
-package com.study.basecode.controller;
+package com.study.basecode.domain.memo.controller;
 
 
-import com.study.basecode.dto.MemoRequsetDto;
-import com.study.basecode.dto.MemoResponseDto;
-import com.study.basecode.service.MemoService;
+import com.study.basecode.domain.memo.dto.MemoRequsetDto;
+import com.study.basecode.domain.memo.dto.MemoResponseDto;
+import com.study.basecode.domain.memo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.study.basecode.entity;
+package com.study.basecode.domain.memo.entity;
 
-import com.study.basecode.dto.MemoRequsetDto;
+import com.study.basecode.domain.memo.dto.MemoRequsetDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

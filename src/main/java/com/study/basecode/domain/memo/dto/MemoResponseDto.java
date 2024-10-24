@@ -1,6 +1,6 @@
-package com.study.basecode.dto;
+package com.study.basecode.domain.memo.dto;
 
-import com.study.basecode.entity.Memo;
+import com.study.basecode.domain.memo.entity.Memo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

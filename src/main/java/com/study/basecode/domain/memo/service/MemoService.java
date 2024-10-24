@@ -1,9 +1,9 @@
-package com.study.basecode.service;
+package com.study.basecode.domain.memo.service;
 
-import com.study.basecode.dto.MemoRequsetDto;
-import com.study.basecode.dto.MemoResponseDto;
-import com.study.basecode.entity.Memo;
-import com.study.basecode.repository.MemoRepository;
+import com.study.basecode.domain.memo.dto.MemoRequsetDto;
+import com.study.basecode.domain.memo.dto.MemoResponseDto;
+import com.study.basecode.domain.memo.entity.Memo;
+import com.study.basecode.domain.memo.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
