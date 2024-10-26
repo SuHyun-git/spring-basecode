@@ -30,6 +30,18 @@ public class MemoController {
         return ResponseEntity.status(HttpStatus.OK).body(memoResponseDtoList);
     }
 
+    @GetMapping("/v1/{memoId}")
+    public ResponseEntity<MemoResponseDto> getOneMemoV1( @PathVariable("memoId") Long memoId ) {
+        MemoResponseDto memoResponseDto = memoService.getOneMemoV1(memoId);
+        return ResponseEntity.status(HttpStatus.OK).body(memoResponseDto);
+    }
+
+//    @GetMapping("/v2/{memoId}")
+//    public ResponseEntity<MemoResponseDto> getOneMemoV2( @PathVariable("memoId") Long memoId ) {
+//        MemoResponseDto memoResponseDto = memoService.getOneMemoV2(memoId);
+//        return ResponseEntity.status(HttpStatus.OK).body(memoResponseDto);
+//    }
+
     @PatchMapping("/{memoId}")
     public ResponseEntity<MemoResponseDto> patchMemo(@PathVariable("memoId") Long memoId, @RequestBody MemoRequsetDto memoRequsetDto) {
         MemoResponseDto memoResponseDto = memoService.patchMemo(memoId, memoRequsetDto);
