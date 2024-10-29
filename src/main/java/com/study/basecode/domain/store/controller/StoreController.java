@@ -1,5 +1,6 @@
 package com.study.basecode.domain.store.controller;
 
+import com.study.basecode.domain.store.dto.CustomPage;
 import com.study.basecode.domain.store.dto.StoreResponseDto;
 import com.study.basecode.domain.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/store")
@@ -29,14 +32,26 @@ public class StoreController {
         return ResponseEntity.ok().body(storeResponseDtoList);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchn")
     public ResponseEntity<Page<StoreResponseDto>> findOneStore(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam String name
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<StoreResponseDto> storeResponseDtoList = storeService.findOneStore(pageable, name);
+        Page<StoreResponseDto> storeResponseDtoList =  storeService.findOneStore(pageable, name);
         return ResponseEntity.ok().body(storeResponseDtoList);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<CustomPage> findOneStoreRedis(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam String name
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        CustomPage storeResponseDtoList = storeService.findOneRedisStore(pageable, name);
+        return ResponseEntity.ok().body(storeResponseDtoList);
+    }
+
 }
