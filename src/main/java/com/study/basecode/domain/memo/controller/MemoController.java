@@ -1,6 +1,7 @@
 package com.study.basecode.domain.memo.controller;
 
 
+import com.study.basecode.domain.memo.dto.MemoOptimisticResponseDto;
 import com.study.basecode.domain.memo.dto.MemoRequsetDto;
 import com.study.basecode.domain.memo.dto.MemoResponseDto;
 import com.study.basecode.domain.memo.service.MemoService;
@@ -39,6 +40,34 @@ public class MemoController {
     @DeleteMapping("/{memoId}")
     public void deleteMemo(@PathVariable("memoId") Long memoId) {
         memoService.deleteMemo(memoId);
+    }
+
+    // 락을 사용하지 않았을 때
+    @PatchMapping("/{memoId}/like/nolock")
+    public ResponseEntity<MemoResponseDto> likeNoLock(@PathVariable("memoId") Long memoId) {
+        MemoResponseDto memoResponseDto = memoService.likeNoLock(memoId);
+        return ResponseEntity.status(HttpStatus.OK).body(memoResponseDto);
+    }
+
+    // 비관적 락
+    @PatchMapping("/{memoId}/like/pessimistic")
+    public ResponseEntity<MemoResponseDto> likePessimistic(@PathVariable("memoId") Long memoId) {
+        MemoResponseDto memoResponseDto = memoService.likePessimistic(memoId);
+        return ResponseEntity.status(HttpStatus.OK).body(memoResponseDto);
+    }
+
+    // 낙관적 락
+    @PatchMapping("/{memoId}/like/optimistic")
+    public ResponseEntity<MemoOptimisticResponseDto> likeOptimistic(@PathVariable("memoId") Long memoId) {
+        MemoOptimisticResponseDto memoResponseDto = memoService.likeOptimistic(memoId);
+        return ResponseEntity.status(HttpStatus.OK).body(memoResponseDto);
+    }
+
+    // redis 분산락 사용
+    @PatchMapping("/{memoId}/like/redis")
+    public ResponseEntity<MemoResponseDto> likeRedis(@PathVariable("memoId") Long memoId) {
+        MemoResponseDto memoResponseDto = memoService.likeRedis(memoId);
+        return ResponseEntity.status(HttpStatus.OK).body(memoResponseDto);
     }
 
 }
