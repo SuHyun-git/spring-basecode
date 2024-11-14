@@ -66,7 +66,4 @@ public class MemoService {
         // 5. DB에서 가져온 데이터 반환
         return new MemoResponseDto(memoFromDb);
     }
-
-//    public MemoResponseDto getOneMemoV2(Long memoId) {
-//    }
 }

@@ -1,0 +1,78 @@
+services:
+  redis-master:
+    container_name: redis-master
+    image: redis:latest
+    networks:
+      - redis-net
+    ports:
+      - 6379:6379
+
+  redis-slave1:
+    container_name: redis-slave1
+    image: redis:latest
+    command: redis-server --slaveof redis-master 6379
+    networks:
+      - redis-net
+    ports:
+      - 6380:6379
+
+  redis-slave2:
+    container_name: redis-slave2
+    image: redis:latest
+    command: redis-server --slaveof redis-master 6379
+    networks:
+      - redis-net
+    ports:
+      - 6381:6379
+
+  sentinel1:
+    container_name: sentinel1
+    image: redis:latest
+    networks:
+      - redis-net
+    ports:
+      - 26379:26379
+    depends_on:
+      - redis-master
+      - redis-slave1
+      - redis-slave2
+    command: >
+      redis-server /usr/local/etc/redis/sentinel.conf --sentinel
+    volumes:
+      - ./sentinel1.conf:/usr/local/etc/redis/sentinel.conf
+
+  sentinel2:
+    container_name: sentinel2
+    image: redis:latest
+    networks:
+      - redis-net
+    ports:
+      - 26380:26380
+    depends_on:
+      - redis-master
+      - redis-slave1
+      - redis-slave2
+    command: >
+      redis-server /usr/local/etc/redis/sentinel.conf --sentinel
+    volumes:
+      - ./sentinel2.conf:/usr/local/etc/redis/sentinel.conf
+
+  sentinel3:
+    container_name: sentinel3
+    image: redis:latest
+    networks:
+      - redis-net
+    ports:
+      - 26381:26381e
+    depends_on:
+      - redis-master
+      - redis-slave1
+      - redis-slave2
+    command: >
+      redis-server /usr/local/etc/redis/sentinel.conf --sentinel
+    volumes:
+      - ./sentinel3.conf:/usr/local/etc/redis/sentinel.conf
+
+networks:
+  redis-net:
+    driver: bridge
