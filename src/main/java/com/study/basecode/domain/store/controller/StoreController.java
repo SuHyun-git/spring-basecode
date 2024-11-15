@@ -1,5 +1,6 @@
 package com.study.basecode.domain.store.controller;
 
+import com.study.basecode.domain.store.dto.StoreLikeResponseDto;
 import com.study.basecode.domain.store.dto.StoreResponseDto;
 import com.study.basecode.domain.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/store")
@@ -39,5 +37,14 @@ public class StoreController {
         Pageable pageable = PageRequest.of(page, size);
         Page<StoreResponseDto> storeResponseDtoList = storeService.findStoreWithName(pageable, name);
         return ResponseEntity.ok().body(storeResponseDtoList);
+    }
+
+    @PatchMapping("/{storeId}/like/{userId}")
+    public ResponseEntity<StoreLikeResponseDto> storeLike (
+            @PathVariable("storeId") Long storeId,
+            @PathVariable("userId") Long userId
+    ) {
+        StoreLikeResponseDto storeLikeResponseDto = storeService.storeLike(storeId, userId);
+        return ResponseEntity.ok().body(storeLikeResponseDto);
     }
 }
