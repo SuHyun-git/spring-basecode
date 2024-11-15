@@ -5,25 +5,73 @@ services:
     networks:
       - redis-net
     ports:
-      - 6379:6379
+      - "6379:6379"
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--repl-diskless-load",
+        "on-empty-db",
+        "--replica-announce-ip",
+        "192.168.0.15",
+        "--replica-announce-port",
+        "6379",
+        "--protected-mode",
+        "no"
+      ]
+    restart: always
 
   redis-slave1:
     container_name: redis-slave1
     image: redis:latest
-    command: redis-server --slaveof redis-master 6379
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--replicaof",
+        "redis-master",
+        "6379",
+        "--repl-diskless-load",
+        "on-empty-db",
+        "--replica-announce-ip",
+        "192.168.0.15",
+        "--replica-announce-port",
+        "6380",
+        "--protected-mode",
+        "no"
+      ]
     networks:
       - redis-net
     ports:
-      - 6380:6379
+      - "6380:6379"
+
 
   redis-slave2:
     container_name: redis-slave2
     image: redis:latest
-    command: redis-server --slaveof redis-master 6379
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--replicaof",
+        "redis-master",
+        "6379",
+        "--repl-diskless-load",
+        "on-empty-db",
+        "--replica-announce-ip",
+        "192.168.0.15",
+        "--replica-announce-port",
+        "6381",
+        "--protected-mode",
+        "no"
+      ]
     networks:
       - redis-net
     ports:
-      - 6381:6379
+      - "6381:6379"
 
   sentinel1:
     container_name: sentinel1
@@ -31,7 +79,7 @@ services:
     networks:
       - redis-net
     ports:
-      - 26379:26379
+      - "26379:26379"
     depends_on:
       - redis-master
       - redis-slave1
@@ -47,7 +95,7 @@ services:
     networks:
       - redis-net
     ports:
-      - 26380:26380
+      - "26380:26379"
     depends_on:
       - redis-master
       - redis-slave1
@@ -63,7 +111,7 @@ services:
     networks:
       - redis-net
     ports:
-      - 26381:26381e
+      - "26381:26379"
     depends_on:
       - redis-master
       - redis-slave1
@@ -76,3 +124,179 @@ services:
 networks:
   redis-net:
     driver: bridge
+
+#services:
+#  es01:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+#    container_name: es01
+#    environment:
+#      - node.name=es01
+#      - cluster.name=search-cluster
+#      - discovery.seed_hosts=es02,es03
+#      - cluster.initial_master_nodes=es01,es02,es03
+#      - xpack.security.enabled=false
+#      - xpack.security.http.ssl.enabled=false
+#      - xpack.security.transport.ssl.enabled=false
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ports:
+#      - "9200:9200" # https
+#      - "9300:9300" #tcp
+#    networks:
+#      - es-bridge
+#  es02:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+#    container_name: es02
+#    environment:
+#      - node.name=es02
+#      - cluster.name=search-cluster
+#      - discovery.seed_hosts=es01,es03
+#      - cluster.initial_master_nodes=es01,es02,es03
+#      - xpack.security.enabled=false
+#      - xpack.security.http.ssl.enabled=false
+#      - xpack.security.transport.ssl.enabled=false
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ports:
+#      - "9201:9200" # https
+#      - "9301:9300" #tcp
+#    networks:
+#      - es-bridge
+#  es03:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.3
+#    container_name: es03
+#    environment:
+#      - node.name=es03
+#      - cluster.name=search-cluster
+#      - discovery.seed_hosts=es01,es02
+#      - cluster.initial_master_nodes=es01,es02,es03
+#      - xpack.security.enabled=false
+#      - xpack.security.http.ssl.enabled=false
+#      - xpack.security.transport.ssl.enabled=false
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ports:
+#      - "9202:9200" # https
+#      - "9302:9300" #tcp
+#    networks:
+#      - es-bridge
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:7.17.3
+#    container_name: logstash
+#    environment:
+#      - xpack.monitoring.enabled=false
+#    ports:
+#      - 5001:5000
+#      - 9600:9600
+#    volumes:
+#      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf # local file mapping
+#    depends_on:
+#      - es01
+#      - es02
+#      - es03
+#    networks:
+#      - es-bridge
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:7.17.3
+#    container_name: kibana
+#    environment:
+#      SERVER_NAME: kibana
+#      ELASTICSEARCH_HOSTS: http://es01:9200
+#    ports:
+#      - 5601:5601
+#    # Elasticsearch Start Dependency
+#    depends_on:
+#      - es01
+#    networks:
+#      - es-bridge
+#networks:
+#  es-bridge:
+#    driver: bridge
+
+#version: "3"
+#services:
+#  my-redis-a:
+#    hostname: redis-master
+#    container_name: redis-master
+#    image: redis:latest
+#    networks:
+#      - redis-net
+#    environment:
+#      - REDIS_REPLICATION_MODE=master
+#      - ALLOW_EMPTY_PASSWORD=yes
+#    volumes:
+#      - ./redis.conf:/etc/redis/redis.conf
+#    ports:
+#      - 5002:6379
+#  my-redis-b:
+#    hostname: redis-replicas-1
+#    container_name: redis-replicas-1
+#    image: redis:latest
+#    networks:
+#      - redis-net
+#    environment:
+#      - REDIS_REPLICATION_MODE=slave
+#      - REDIS_MASTER_HOST=redis-master
+#      - ALLOW_EMPTY_PASSWORD=yes
+#    volumes:
+#      - ./redis.conf:/etc/redis/redis.conf
+#    ports:
+#      - 5003:6379
+#    depends_on:
+#      - my-redis-a
+#
+#  redis-sentinel-1:
+#    container_name: sentinel1
+#    image: redis:latest
+#    networks:
+#      - redis-net
+#    environment:
+#      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+#      - REDIS_MASTER_HOST=redis-master
+#      - REDIS_MASTER_PORT_NUMBER=6379
+#      - REDIS_MASTER_SET=mymaster
+#      - REDIS_SENTINEL_QUORUM=2
+#    volumes:
+#      - ./sentinel.conf:/etc/redis/sentinel.conf
+#    ports:
+#      - 26379:26379
+#    depends_on:
+#      - my-redis-a
+#      - my-redis-b
+#  redis-sentinel-2:
+#    container_name: sentinel2
+#    image: redis:latest
+#    networks:
+#      - redis-net
+#    environment:
+#      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+#      - REDIS_MASTER_HOST=redis-master
+#      - REDIS_MASTER_PORT_NUMBER=6379
+#      - REDIS_MASTER_SET=mymaster
+#      - REDIS_SENTINEL_QUORUM=2
+#    volumes:
+#      - ./sentinel.conf:/etc/redis/sentinel.conf
+#    ports:
+#      - 26380:26379
+#    depends_on:
+#      - my-redis-a
+#      - my-redis-b
+#  redis-sentinel-3:
+#    container_name: sentinel3
+#    image: redis:latest
+#    networks:
+#      - redis-net
+#    environment:
+#      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+#      - REDIS_MASTER_HOST=redis-master
+#      - REDIS_MASTER_PORT_NUMBER=6379
+#      - REDIS_MASTER_SET=mymaster
+#      - REDIS_SENTINEL_QUORUM=2
+#    volumes:
+#      - ./sentinel.conf:/etc/redis/sentinel.conf
+#    ports:
+#      - 26381:26379
+#    depends_on:
+#      - my-redis-a
+#      - my-redis-b
+#networks:
+#  redis-net:
+#    driver: bridge
+
